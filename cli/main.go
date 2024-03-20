@@ -10,7 +10,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	
+
 	"github.com/mriart/myomdb/movie"
 )
 
@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 
-	m := Movie{}
+	m := movie.Movie{}
 	err := m.GetMovie(title)
 	if err != nil {
 		fmt.Println("Something went wrong in GetMovie")

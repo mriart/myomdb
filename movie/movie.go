@@ -68,6 +68,21 @@ func (m *Movie) PrintMovie() {
 	fmt.Println("Actors:\t", m.Actors)
 }
 
+// Returns an string with the movie information. Useful for the web
+func (m *Movie) PrintStringMovie() string {
+	str := ""
+	str += "Title:\t" + m.Title + "\n"
+	str += "Year:\t" + m.Year + "\n"
+	for _, v := range m.Ratings {
+		str += shorten(v.Source) + "\b:\t" + v.Value + "\n"
+	}
+	str += "Awards:\t" + m.Awards + "\n"
+	str += "Genre:\t" + m.Genre + "\n"
+	str += shorten("Director") + "\b:\t" + m.Director + "\n"
+	str += "Actors:\t" + m.Actors
+	return str
+}
+
 // Print in ascci art the poster. It takes the URL from OMDB, and gets the poster from the internet (media AWS)
 func (m *Movie) PrintPoster() error {
 	// Get the poster image from url
