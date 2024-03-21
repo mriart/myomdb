@@ -38,9 +38,7 @@
             background-color: #0056b3;
         }
     </style>
-
-    
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -48,22 +46,21 @@
         <h1>Movie Information</h1>
         <button id="startButton">Speech me the title</button>
         <div id="output"></div>
-        <div id="output2"></div>
+        <div id="movieInfo"></div>
     </div>
 
-<script>
-        
+    <script>
         const startButton = document.getElementById('startButton');
         const outputDiv = document.getElementById('output');
-        const output2Div = document.getElementById('output2');
+        const movieInfoDiv = document.getElementById('movieInfo');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
 
         async function printMovie(transcript) {
             var url = '/movie?title=' + transcript;
             try {
                 const response = await axios.get(url);
-                const data = response.data; 
-                document.getElementById('output2').textContent = data;
+                const data = response.data;
+                movieInfoDiv.innerHTML = data;
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -96,4 +93,5 @@
         });
     </script>
 </body>
+
 </html>

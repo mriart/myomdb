@@ -1,8 +1,6 @@
 // An omdb CLI to get information (ratings, year...) of a movie.
 // Usage:  Usage: cli [-p] [-h] title
-//
 // Credits to OMDB. Requires an API key.
-//
 // Marc Riart, 202403
 
 package main

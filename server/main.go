@@ -1,3 +1,7 @@
+// An omdb web server for web and mobile apps to get movie information.
+// Credits to OMDB. Requires an API key.
+// Marc Riart, 202403
+
 package main
 
 import (
@@ -26,6 +30,6 @@ func hMovie(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, err)
 		return
 	}
-	str := m.PrintStringMovie()
-	fmt.Fprintln(w, str)
+	res := m.PrintWebMovie()
+	fmt.Fprint(w, res)
 }

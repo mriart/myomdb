@@ -1,5 +1,5 @@
 // Movie type struct & methods to complement the main package.
-// Credits to OMDB. Requires an API key.
+// Credits to OMDB. Requires an API key in the env variable API_KEY.
 // Marc Riart, 202403
 
 package movie
@@ -10,11 +10,10 @@ import (
 	"image"
 	"io"
 	"net/http"
+	"os"
 
 	"github.com/qeesung/image2ascii/convert"
 )
-
-const apiKey = "8564cbe7"
 
 // Type definition for Movie. It gets the data from ODMB
 type Movie struct {
@@ -38,7 +37,7 @@ type Movie struct {
 
 // Method to fill the struct, getting from the OMDB site
 func (m *Movie) GetMovie(title string) error {
-	res, err := http.Get("http://www.omdbapi.com/?t=" + title + "&apikey=" + apiKey)
+	res, err := http.Get("http://www.omdbapi.com/?t=" + title + "&apikey=" + getAPIKey())
 	if err != nil {
 		fmt.Println("Error connectiong to OMDB for " + title)
 		return err
@@ -55,7 +54,7 @@ func (m *Movie) GetMovie(title string) error {
 	return nil
 }
 
-// Print the movie information
+// Print the movie information in the stdout
 func (m *Movie) PrintMovie() {
 	fmt.Println("Title:\t", m.Title)
 	fmt.Println("Year:\t", m.Year)
@@ -68,19 +67,24 @@ func (m *Movie) PrintMovie() {
 	fmt.Println("Actors:\t", m.Actors)
 }
 
-// Returns an string with the movie information. Useful for the web
-func (m *Movie) PrintStringMovie() string {
-	str := ""
-	str += "Title:\t" + m.Title + "\n"
-	str += "Year:\t" + m.Year + "\n"
+// Returns an string with the movie information. Used in the web
+func (m *Movie) PrintWebMovie() string {
+	// Information of the movie
+	res := "<br>"
+	res += "Title: " + m.Title + "<br>"
+	res += "Year: " + m.Year + "<br>"
 	for _, v := range m.Ratings {
-		str += shorten(v.Source) + "\b:\t" + v.Value + "\n"
+		res += v.Source + ": " + v.Value + "<br>"
 	}
-	str += "Awards:\t" + m.Awards + "\n"
-	str += "Genre:\t" + m.Genre + "\n"
-	str += shorten("Director") + "\b:\t" + m.Director + "\n"
-	str += "Actors:\t" + m.Actors
-	return str
+	res += "Awards: " + m.Awards + "<br>"
+	res += "Genre: " + m.Genre + "<br>"
+	res += "Director: " + m.Director + "<br>"
+	res += "Actors: " + m.Actors + "<br><br>"
+
+	// Poster of the movie
+	res += "<img src=" + m.Poster + ">"
+
+	return res
 }
 
 // Print in ascci art the poster. It takes the URL from OMDB, and gets the poster from the internet (media AWS)
@@ -109,6 +113,17 @@ func (m *Movie) PrintPoster() error {
 	fmt.Println(asciiArt)
 
 	return nil
+}
+
+// Return the API key from the API_KEY env variable
+func getAPIKey() (apiKey string) {
+	apiKey = os.Getenv("API_KEY")
+	if apiKey == "" {
+		// Show the fact and continue. Let's decide if the API server accepts or not
+		fmt.Println("Warning. No API key defined in API_KEY env variable")
+	}
+
+	return apiKey
 }
 
 // Shorten the receiver string in order to tabulate well, visually appealing
